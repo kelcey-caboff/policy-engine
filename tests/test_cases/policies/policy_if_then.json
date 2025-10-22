@@ -1,0 +1,20 @@
+{
+    "controls": [
+        {
+            "id": "if_then_001",
+            "description": "If 'personal' data, 'dpia' must exist.",
+            "check": {
+                "op": "if",
+                "if": {
+                    "op": "equals",
+                    "field": "/data_class",
+                    "value": "personal"
+                },
+                "then": {
+                    "op": "exists_and_not_empty",
+                    "field": "/dpia"
+                }
+            }
+        }
+    ]
+}

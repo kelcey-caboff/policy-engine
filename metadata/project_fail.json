@@ -1,0 +1,8 @@
+{
+    "project_name": "Project Apollo",
+    "owner": "Alice",
+    "llm": {
+        "model": ["gpt-40", "llama3"],
+        "training": true
+    }
+}

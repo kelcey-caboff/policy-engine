@@ -1,0 +1,20 @@
+{
+    "controls": [
+        {
+            "id": "llm_001",
+            "description": "If project uses an LLM then it must not train on our data.",
+            "check": {
+                "op": "if",
+                "if": {
+                    "op": "some",
+                    "field": "/llm/model"
+                },
+                "then": {
+                    "op": "equals",
+                    "field": "/llm/training",
+                    "value": false
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,12 @@
+{
+    "controls": [
+        {
+            "id": "some_001",
+            "description": "LLM key must exist.",
+            "check": {
+                "op": "some",
+                "field": "/llm"
+            }
+        }
+    ]
+}

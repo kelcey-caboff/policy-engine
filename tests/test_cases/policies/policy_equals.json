@@ -1,0 +1,13 @@
+{
+    "controls": [
+        {
+            "id": "equals_001",
+            "description": "Type must be 'prod'.",
+            "check": {
+                "op": "equals",
+                "field": "/type",
+                "value": "prod"
+            }
+        }
+    ]
+}

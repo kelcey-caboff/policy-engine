@@ -1,0 +1,12 @@
+{
+    "controls": [
+        {
+            "id": "example_base",
+            "description": "An AI project must have a named owner.",
+            "check": {
+                "op": "exists_and_not_empty",
+                "field": "/owner"
+            }
+        }
+    ]
+}

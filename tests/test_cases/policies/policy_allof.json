@@ -1,0 +1,22 @@
+{
+    "controls": [
+        {
+            "id": "allof_001",
+            "description": "Must be 'prod' and have an owner.",
+            "check": {
+                "op": "allOf",
+                "rules": [
+                    {
+                        "op": "equals",
+                        "field": "/type",
+                        "value": "prod"
+                    },
+                    {
+                        "op": "exists_and_not_empty",
+                        "field": "/owner"
+                    }
+                ]
+            }
+        }
+    ]
+}

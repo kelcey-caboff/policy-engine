@@ -1,0 +1,23 @@
+{
+    "controls": [
+        {
+            "id": "anyof_001",
+            "description": "Must be 'prod' or 'staging'.",
+            "check": {
+                "op": "anyOf",
+                "rules": [
+                    {
+                        "op": "equals",
+                        "field": "/type",
+                        "value": "prod"
+                    },
+                    {
+                        "op": "equals",
+                        "field": "/type",
+                        "value": "staging"
+                    }
+                ]
+            }
+        }
+    ]
+}

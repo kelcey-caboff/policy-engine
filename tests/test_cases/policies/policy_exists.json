@@ -1,0 +1,12 @@
+{
+    "controls":[
+        { 
+            "id": "exists_001",
+            "description": "Owner must exist and not be empty.",
+            "check": {
+                "op": "exists_and_not_empty",
+                "field": "/owner" 
+            }
+        }
+    ]
+}

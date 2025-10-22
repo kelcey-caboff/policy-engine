@@ -1,0 +1,16 @@
+{
+    "controls": [
+        {
+            "id": "not_001",
+            "description": "Type must not be 'dev'.",
+            "check": {
+                "op": "not",
+                "rule": {
+                    "op": "equals",
+                    "field": "/type",
+                    "value": "dev"
+                }
+            }
+        }
+    ]
+}

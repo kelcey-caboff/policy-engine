@@ -1,0 +1,24 @@
+{
+    "controls": [
+        {
+            "id": "if_else_001",
+            "description": "If 'critical', must have 'critical_review', else must have 'standard_review'.",
+            "check": {
+                "op": "if",
+                "if": {
+                    "op": "equals",
+                    "field": "/type",
+                    "value": "critical"
+                },
+                "then": {
+                    "op": "exists_and_not_empty",
+                    "field": "/critical_review"
+                },
+                "else": {
+                    "op": "exists_and_not_empty",
+                    "field": "/standard_review"
+                }
+            }
+        }
+    ]
+}
