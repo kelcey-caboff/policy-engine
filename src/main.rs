@@ -2,13 +2,32 @@ use std::error::Error;
 use std::fs;
 use std::path::Path;
 use serde_json::Value;
+use clap::Parser;
 
 use policy_engine::{PolicyEngine};
+
+#[derive(Parser, Debug)]
+struct Args {
+    /// Location of the policies folder
+    #[arg(short, long)]
+    policies: String,
+
+    /// Metadata file to be evaluated
+    #[arg(short, long)]
+    metadata: String,
+
+    /// Output JSON
+    #[arg(short, long)]
+    output: Option<String>,
+}
 
 fn main() -> Result<(), Box<dyn Error>> {
 
     let mut engine = PolicyEngine::new();
-    let policies_path = Path::new("policies");
+    
+    let args = Args::parse();
+
+    let policies_path = Path::new(&args.policies);
 
     println!("Loading policies from {:?}...", policies_path.canonicalize()?);
 
@@ -25,20 +44,22 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     }
 
-    println!("\n--- Validating 'project_pass.json' (Should PASS) ---");
-    let metadata_pass_str = fs::read_to_string("metadata/project_pass.json")?;
-    let metadata_pass: Value = serde_json::from_str(&metadata_pass_str)?;
+    let meta_file = Path::new(&args.metadata);
+    println!("--- Validating {} ---", &args.metadata);
+    let metadata_file_str = fs::read_to_string(meta_file)?;
+    let metadata_file_parsed: Value = serde_json::from_str(&metadata_file_str)?;
     
-    let result_pass = engine.validate(&metadata_pass);
-    println!("{}", result_pass);
-
-    println!("--- Validating 'project_fail.json' (Should FAIL) ---");
-    let metadata_fail_str = fs::read_to_string("metadata/project_fail.json")?;
-    let metadata_fail: Value = serde_json::from_str(&metadata_fail_str)?;
+    let metadata_file_result = engine.validate(&metadata_file_parsed);
     
-    let result_fail = engine.validate(&metadata_fail);
-    println!("{}", result_fail);
-    println!("JSON Report:\n{}", result_fail.to_json()?);
+    match &args.output {
+        Some(output_file) => {
+            let json_report = metadata_file_result.to_json()?;
+            fs::write(&output_file, json_report)?;
+            
+            println!("Wrote JSON report to {:?}", output_file);
+        },
+        _ => println!("{}", metadata_file_result),
+    }
 
     Ok(())
 }

@@ -169,7 +169,7 @@ impl fmt::Display for Validation {
                 };
                 writeln!(f, "Validation FAILED with {} {}:", reqs.len(), plural)?;
                 for (i, r) in reqs.iter().enumerate() {
-                    writeln!(f, "\t{}: RULE <{}> => {}", i+1, r.control, r.required)?;
+                    writeln!(f, "  - {}: RULE \"{}\" => {}", i+1, r.control, r.required)?;
                 }
                 Ok(())
             }
