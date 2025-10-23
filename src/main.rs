@@ -37,17 +37,41 @@ fn main() -> Result<(), Box<dyn Error>> {
         
         // Ensure we only read .json files
         if path.is_file() && path.extension().map_or(false, |s| s == "json") {
-            println!("  - Loading rules from {:?}", path.file_name().unwrap());
-            let json_data = fs::read_to_string(&path)?;
-            engine.add_policies_from_json(&json_data)
-                .map_err(|e| format!("Error parsing {}: {}", path.display(), e))?;
+            let filename = path.file_name().unwrap().to_string_lossy();
+            println!("  - Loading rules from {:?}", filename);
+
+            let json_data = match fs::read_to_string(&path) {
+                Ok(data) => data,
+                Err(e) => {
+                    eprintln!("    - Error: Failed to read policy file {:?}: {}", filename, e);
+                    continue;
+                }
+            };
+
+            if let Err(e) = engine.add_policies_from_json(&json_data) {
+                // Print error to stderr and skip this file
+                eprintln!("    - Error: Failed to parse policy file {:?}: {}", filename, e);
+                continue
+            }
         }
     }
 
     let meta_file = Path::new(&args.metadata);
+    let filename = meta_file.file_name().unwrap().to_string_lossy();
     println!("--- Validating {} ---", &args.metadata);
-    let metadata_file_str = fs::read_to_string(meta_file)?;
-    let metadata_file_parsed: Value = serde_json::from_str(&metadata_file_str)?;
+    let metadata_file_str = match fs::read_to_string(meta_file) {
+        Ok(data) => data,
+        Err(e) => {
+            panic!("Error: Failed to read metadata file {:?}: {}", filename, e);
+        }
+    };
+
+    let metadata_file_parsed: Value = match serde_json::from_str(&metadata_file_str) {
+        Ok(data) => data,
+        Err(e) => {
+            panic!("Error: Failed to parse metadata file {:?}: {}", filename, e);
+        }
+    };
     
     let metadata_file_result = engine.validate(&metadata_file_parsed);
     

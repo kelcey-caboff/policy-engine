@@ -1,6 +1,7 @@
 use std::fmt;
 use serde::{Serialize, Deserialize};
-use serde_json::Value; 
+use serde_json::Value;
+use schemars::{schema_for, JsonSchema};
 
 #[derive(Debug, Serialize)]
 pub struct Requirements {
@@ -14,19 +15,19 @@ pub enum Validation {
     False(Vec<Requirements>),
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, JsonSchema)]
 struct PolicyFile {
     controls: Vec<JsonControl>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, JsonSchema)]
 struct JsonControl {
     id: String,
     description: String,
     check: Check,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, JsonSchema)]
 #[serde(tag = "op")]
 enum Check {
     #[serde(rename = "exists_and_not_empty")]
@@ -175,4 +176,9 @@ impl fmt::Display for Validation {
             }
         }
     }
+}
+
+pub fn generate_schema() -> String {
+    let schema = schema_for!(PolicyFile);
+    serde_json::to_string_pretty(&schema).unwrap()
 }
