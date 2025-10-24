@@ -1,3 +1,8 @@
+//! # Policy Engine
+//!
+//! This crate provides a `PolicyEngine` for validating JSON metadata against
+//! a set of JSON-defined policy rules.
+
 use std::fmt;
 use serde::{Serialize, Deserialize};
 use serde_json::Value;
@@ -29,25 +34,51 @@ struct JsonControl {
 
 #[derive(Deserialize, JsonSchema)]
 #[serde(tag = "op")]
+/// Defines a single check operation within a policy.
 enum Check {
+    /// Checks if a field exists, is a string, and is not empty.
+    ///
+    /// JSON: `{ "op": "exists_and_not_empty", "field": "/path/to/string" }`
     #[serde(rename = "exists_and_not_empty")]
     ExistsAndNotEmpty { field: String },
 
+    /// Checks if the value at `field` is exactly equal to `value`.
+    ///
+    /// JSON: `{ "op": "equals", "field": "/path/to/field", "value": "some-value" }`
     #[serde(rename = "equals")]
     Equals { field: String, value: Value},
 
+    /// Logical AND. All checks in `rules` must pass.
+    ///
+    /// JSON: `{ "op": "allOf", "rules": [ ...checks... ] }`
     #[serde(rename = "allOf")]
     AllOf { rules: Vec<Check> },
 
+    /// Logical OR. At least one check in `rules` must pass.
+    ///
+    /// JSON: `{ "op": "anyOf", "rules": [ ...checks... ] }`
     #[serde(rename = "anyOf")]
     AnyOf { rules: Vec<Check> },
 
+    /// Checks that the field exists and its value is not null. This will pass for "", 0, false, or [].
+    ///
+    /// JSON: `{ "op": "some", "field": "..." }`
     #[serde(rename = "some")]
     Some { field: String},
 
+    /// Logical NOT. Inverts the result of the nested rule.
+    /// 
+    /// JSON: `{ "op": "not", "rule": { ... } }`
     #[serde(rename = "not")]
     Not { rule: Box<Check> },
 
+    /// A standard If-Then-Else block. 
+    /// 1. The if check runs. 
+    /// 2. If true, the **then** check must pass. 
+    /// 3. If false, the **else** check must pass. 
+    /// 4. If **else** is omitted and **if** is false, the entire rule passes.
+    /// 
+    /// JSON: `{ "op": "if", "if": {...}, "then": {...}, "else": {...} }`
     #[serde(rename = "if")]
     If {
         #[serde(rename = "if")]
@@ -58,6 +89,9 @@ enum Check {
         else_cond: Option<Box<Check>>,
     },
 
+    /// Checks if a field is an array and contains the given `value`.
+    ///
+    /// JSON: `{ "op": "contains", "field": "/path/to/array", "value": "item" }`
     #[serde(rename = "contains")]
     Contains { field: String, value: Value },
 }
