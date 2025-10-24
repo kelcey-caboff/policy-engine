@@ -57,6 +57,9 @@ enum Check {
         #[serde(rename = "else", default, skip_serializing_if = "Option::is_none")]
         else_cond: Option<Box<Check>>,
     },
+
+    #[serde(rename = "contains")]
+    Contains { field: String, value: Value },
 }
 
 pub struct PolicyEngine {
@@ -130,6 +133,11 @@ impl PolicyEngine {
                         }
                     }
                 }
+            }
+            Check::Contains { field, value } => {
+                metadata.pointer(field)
+                    .and_then(|v| v.as_array())
+                    .map_or(false, |arr| arr.contains(value))
             }
         }
     }

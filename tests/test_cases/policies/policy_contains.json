@@ -1,0 +1,13 @@
+{
+    "controls": [
+        {
+            "id": "contains_001",
+            "description": "Type must contain 'prod'.",
+            "check": {
+                "op": "contains",
+                "field": "/type",
+                "value": "prod"
+            }
+        }
+    ]
+}

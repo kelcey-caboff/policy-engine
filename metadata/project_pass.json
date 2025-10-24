@@ -1,8 +1,22 @@
 {
     "project_name": "Project Apollo",
-    "owner": "Alice",
+    "sro": {
+        "name": "Alice",
+        "email": "alice@org.gov.uk",
+        "job_title": "Deputy Directory of Horses"
+    },
     "llm": {
         "model": ["gpt-40", "llama3"],
-        "training": false
+        "training": false,
+        "owner": {
+            "name": "Bob",
+            "email": "bob@org.gov.uk"
+        }
+    },
+    "data": {
+        "sensitivity": "official"
+    },
+    "assurance_docs": {
+        "official": "url-to-some-doc"
     }
 }

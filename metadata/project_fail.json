@@ -1,8 +1,12 @@
 {
     "project_name": "Project Apollo",
-    "owner": "Alice",
+    "owner": "",
     "llm": {
         "model": ["gpt-40", "llama3"],
-        "training": true
+        "training": true,
+        "owner": "Dave"
+    },
+    "data": {
+        "sensitivity": "top_secret"
     }
 }

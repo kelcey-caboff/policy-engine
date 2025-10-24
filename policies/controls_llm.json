@@ -1,8 +1,8 @@
 {
     "controls": [
         {
-            "id": "llm_001",
-            "description": "If project uses an LLM then it must not train on our data.",
+            "id": "llm_policy_001",
+            "description": "If you are using an LLM you must have a model owner name and email address.",
             "check": {
                 "op": "if",
                 "if": {
@@ -10,9 +10,36 @@
                     "field": "/llm/model"
                 },
                 "then": {
-                    "op": "equals",
-                    "field": "/llm/training",
-                    "value": false
+                    "op": "allOf",
+                    "rules": [
+                        {
+                            "op": "exists_and_not_empty",
+                            "field": "/llm/owner/name"
+                        },
+                        {
+                            "op": "exists_and_not_empty",
+                            "field": "/llm/owner/email"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "llm_policy_002",
+            "description": "If you are using an LLM, it cannot train on our internal data.",
+            "check": {
+                "op": "if",
+                "if": {
+                    "op": "some",
+                    "field": "/llm/model"
+                },
+                "then": {
+                    "op": "not",
+                    "rule": {
+                        "op": "equals",
+                        "field": "/llm/training",
+                        "value": true
+                    }
                 }
             }
         }

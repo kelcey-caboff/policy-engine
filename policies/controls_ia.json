@@ -1,0 +1,96 @@
+{
+    "controls": [
+        {
+            "id": "ia_policy_001",
+            "description": "If handling 'official' data, it must have IA documentation for 'official' use.",
+            "check": {
+                "op": "if",
+                "if": {
+                    "op": "equals",
+                    "field": "/data/sensitivity",
+                    "value": "official"
+                },
+                "then": {
+                    "op": "exists_and_not_empty",
+                    "field": "/assurance_docs/official"
+                }
+            }
+        },
+        {
+            "id": "ia_policy_002",
+            "description": "If handling 'official-sensitive' data, it must have IA documentation for 'official-sensitive' use.",
+            "check": {
+                "op": "if",
+                "if": {
+                    "op": "allOf",
+                    "rules": [
+                        {
+                            "op": "equals",
+                            "field": "/data/sensitivity",
+                            "value": "official"
+                        },
+                        {
+                            "op": "equals",
+                            "field": "/data/handling",
+                            "value": "sensitive"
+                        }
+                    ]
+                },
+                "then": {
+                    "op": "exists_and_not_empty",
+                    "field": "/assurance_docs/official_sensitive"
+                }
+            }
+        },
+        {
+            "id": "ia_policy_003",
+            "description": "If handling 'secret' data, it must have IA documentation for 'secret' use.",
+            "check": {
+                "op": "if",
+                "if": {
+                    "op": "equals",
+                    "field": "/data/sensitivity",
+                    "value": "secret"  
+                },
+                "then": {
+                    "op": "allOf",
+                    "rules": [
+                        {
+                            "op": "exists_and_not_empty",
+                            "field": "/assurance/secret"
+                        },
+                        {
+                            "op": "exists_and_not_empty",
+                            "field": "/assurance/cybersecurity_docs"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "ia_policy_004",
+            "description": "If handling 'top secret' data, it must have IA documentation for 'top secret' use.",
+            "check": {
+                "op": "if",
+                "if": {   
+                    "op": "equals",
+                    "field": "/data/sensitivity",
+                    "value": "top_secret"    
+                },
+                "then": {
+                    "op": "allOf",
+                    "rules": [
+                        {
+                            "op": "exists_and_not_empty",
+                            "field": "/assurance/top_secret"
+                        },
+                        {
+                            "op": "exists_and_not_empty",
+                            "field": "/assurance/cybersecurity_docs"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

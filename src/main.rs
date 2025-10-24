@@ -58,7 +58,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let meta_file = Path::new(&args.metadata);
     let filename = meta_file.file_name().unwrap().to_string_lossy();
-    println!("--- Validating {} ---", &args.metadata);
+    println!("Validating {}", &args.metadata);
     let metadata_file_str = match fs::read_to_string(meta_file) {
         Ok(data) => data,
         Err(e) => {

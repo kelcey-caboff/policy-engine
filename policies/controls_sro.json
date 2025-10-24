@@ -1,0 +1,25 @@
+{
+    "controls": [
+        {
+            "id": "sro_policy",
+            "description": "A Senior Responsible Owner name, email and job title must be specified.",
+            "check": {
+                "op": "allOf",
+                "rules": [
+                    {
+                        "op": "exists_and_not_empty",
+                        "field": "/sro/name"
+                    },
+                    {
+                        "op": "exists_and_not_empty",
+                        "field": "/sro/email"
+                    },
+                    {
+                        "op": "exists_and_not_empty",
+                        "field": "/sro/job_title"
+                    }
+                ]
+            }
+        }
+    ]
+}
