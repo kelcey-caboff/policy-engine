@@ -209,7 +209,7 @@ You can also use policy_engine as a library in your own Rust project.
 policy_engine = { path = "/path/to/policy_engine" } # Or from crates.io
 serde_json = "1.0.145"
 ```
-### 2. Example Usage
+### 2. Example Usage
 
 ```rust
 use policy_engine::PolicyEngine;
